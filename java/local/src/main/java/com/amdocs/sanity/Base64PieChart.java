@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 final class Base64PieChart {
 
-    public static String produce(int passedCount, int failedCount) throws IOException {
+    static String produce(int passedCount, int failedCount) throws IOException {
         BufferedImage image = producePieChartImage(passedCount, failedCount);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
