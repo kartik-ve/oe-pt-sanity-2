@@ -22,14 +22,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 
 final class ReadyAPIReportGenerator {
 
@@ -195,108 +187,6 @@ final class ReadyAPIReportGenerator {
         return merged;
     }
 
-    private static void generatePieChartImage(int passedCount, int failedCount, String outputFile) throws IOException {
-
-        int size = 220;
-        int padding = 10;
-
-        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = image.createGraphics();
-
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-        // Transparent background
-        g.setComposite(AlphaComposite.Clear);
-        g.fillRect(0, 0, size, size);
-        g.setComposite(AlphaComposite.SrcOver);
-
-        int diameter = size - (padding * 2);
-        int center = size / 2;
-        int radius = diameter / 2;
-
-        int total = passedCount + failedCount;
-        double passedPercent = total > 0 ? (passedCount * 100.0) / total : 0;
-        double failedPercent = total > 0 ? (failedCount * 100.0) / total : 0;
-
-        // Angles
-        double passedAngle = passedPercent * 360.0 / 100.0;
-
-        int startAngle = 90;
-        int passedSweep = (int) Math.round(-passedAngle);
-        int failedSweep = -360 - passedSweep;
-
-        // --- Draw slices ---
-        g.setColor(new Color(0, 128, 0)); // passed
-        g.fillArc(padding, padding, diameter, diameter, startAngle, passedSweep);
-
-        g.setColor(Color.RED); // failed
-        g.fillArc(padding, padding, diameter, diameter,
-                startAngle + passedSweep, failedSweep);
-
-        // --- Text settings ---
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Source Sans Pro", Font.BOLD, 13));
-
-        // Passed text
-        drawSliceText(
-                g,
-                center,
-                center,
-                radius * 0.65,
-                startAngle + passedSweep / 2.0,
-                passedCount,
-                passedPercent);
-
-        // Failed text
-        drawSliceText(
-                g,
-                center,
-                center,
-                radius * 0.65,
-                startAngle + passedSweep + failedSweep / 2.0,
-                failedCount,
-                failedPercent);
-
-        g.dispose();
-        ImageIO.write(image, "png", new File(outputFile));
-    }
-
-    private static void drawSliceText(
-            Graphics2D g,
-            int centerX,
-            int centerY,
-            double textRadius,
-            double angleDeg,
-            int count,
-            double percent) {
-
-        // Skip tiny slices (prevents unreadable overlap)
-        if (percent < 5) {
-            return;
-        }
-
-        double angleRad = Math.toRadians(angleDeg);
-
-        int x = (int) (centerX + textRadius * Math.cos(angleRad));
-        int y = (int) (centerY - textRadius * Math.sin(angleRad));
-
-        String line1 = String.valueOf(count);
-        String line2 = String.format("%.2f%%", percent);
-
-        FontMetrics fm = g.getFontMetrics();
-
-        int line1Width = fm.stringWidth(line1);
-        int line2Width = fm.stringWidth(line2);
-
-        int lineHeight = fm.getHeight();
-
-        g.drawString(line1, x - line1Width / 2, y);
-        g.drawString(line2, x - line2Width / 2, y + lineHeight);
-    }
-
     private static void generateHtml(TestResults results, String outputPath, String jobName) throws IOException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String currentDate = dateFormat.format(new Date());
@@ -344,11 +234,11 @@ final class ReadyAPIReportGenerator {
                 + String.format("%.3f", results.totalTime) + "s\n");
         html.append("                            </p>\n");
 
-        generatePieChartImage(results.totalPassed, results.totalFailed, outputPath + File.separator + "piechart.png");
+        String base64PieChart = Base64PieChart.produce(results.totalPassed, results.totalFailed);
 
         html.append("                            <div style=\"text-align:center;\">\n");
-        html.append(
-                "                                <img src=\"cid:piechart.png\" width=\"180\" alt=\"Resultant Pie Chart\" style=\"display:block; margin:auto;\">\n");
+        html.append("                                <img src=\"data:image/png;base64," + base64PieChart
+                + "\" width=\"180\" alt=\"Resultant Pie Chart\" style=\"display:block; margin:auto;\">\n");
         html.append("                            </div>\n");
         html.append("                        </td>\n\n");
 
