@@ -19,7 +19,7 @@ if ("%SANITY_TYPE%"=="Basic") (
   set "TESTSUITE_PREFIX=Basic Sanity - "
 )
 
-for %%S in (NC COS CR RP MT BT SU) do (
+for %%S in (NC COS CR RP MT BT SU COAM) do (
   echo Running flow %%S
 
   ssh omswrk1@illnqw%ENV% ^
@@ -33,6 +33,13 @@ for %%S in (NC COS CR RP MT BT SU) do (
   if "%%S"=="MT" set "TESTSUITE=Move & Transfer"
   if "%%S"=="BT" set "TESTSUITE=Bulk Tenant"
   if "%%S"=="SU" set "TESTSUITE=Seasonal Suspend"
+  if ("%%S"=="COAM") (
+    if "%SANITY_TYPE%"=="Basic" (
+      set "TESTSUITE=CO & AM"
+    ) else (
+      goto :after_loop
+    )
+  )
 
   call testrunner.bat ^
     -E "ENV %ENV% GTM" ^
@@ -46,5 +53,7 @@ for %%S in (NC COS CR RP MT BT SU) do (
   ssh omswrk1@illnqw%ENV% ^
     "java -cp %REMOTE_WORKSPACE% LogSearch %REMOTE_BUILD%/%%S.log"
 )
+
+:after_loop
 
 exit /b 0
