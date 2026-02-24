@@ -15,7 +15,7 @@ ssh omswrk1@illnqw%ENV% ^
   "javac %REMOTE_WORKSPACE%/LogSearch.java"
 
 set TESTSUITE_PREFIX=
-if ("%SANITY_TYPE%"=="Basic") (
+if "%SANITY_TYPE%"=="Basic" (
   set "TESTSUITE_PREFIX=Basic Sanity - "
 )
 
@@ -33,7 +33,7 @@ for %%S in (NC COS CR RP MT BT SU COAM) do (
   if "%%S"=="MT" set "TESTSUITE=Move & Transfer"
   if "%%S"=="BT" set "TESTSUITE=Bulk Tenant"
   if "%%S"=="SU" set "TESTSUITE=Seasonal Suspend"
-  if ("%%S"=="COAM") (
+  if "%%S"=="COAM" (
     if "%SANITY_TYPE%"=="Basic" (
       set "TESTSUITE=CO & AM"
     ) else (
