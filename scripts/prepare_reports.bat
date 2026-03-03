@@ -4,7 +4,7 @@ set REMOTE_BUILD=/users/gen/omswrk1/JEE/OMS/logs/OmsDomain/OmsServer/sanity_logs
 
 if not exist "%ERROR_DIR%" mkdir "%ERROR_DIR%"
 scp omswrk1@illnqw%ENV%:%REMOTE_BUILD%/*.err ^
-  "%BUILD_DIR%\error_logs"
+  "%ERROR_DIR%"
 
 java -cp "java\local\target\classes;java\local\target\dependency\*" ^
   com.amdocs.sanity.SanityRunner ^
