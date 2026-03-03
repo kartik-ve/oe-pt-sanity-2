@@ -53,7 +53,7 @@ pipeline {
         always {
             emailext(
                 subject: "${env.JOB_NAME} - Env #${params.ENV} Build #${env.BUILD_NUMBER}",
-                from: "kartikve@amdocs.com",
+                from: "jenkins@localhost",
                 to: "AQE-OffShoreGTM_Testing@int.amdocs.com",
                 replyTo: "kartikve@amdocs.com",
                 body: readFile("${env.BUILD_NUMBER}/summary-report.html"),
