@@ -12,7 +12,7 @@ ssh omswrk1@illnqw%ENV% ^
 scp java\remote\LogSearch.java ^
   omswrk1@illnqw%ENV%:%REMOTE_WORKSPACE%
 ssh omswrk1@illnqw%ENV% ^
-  "javac %REMOTE_WORKSPACE%/LogSearch.java"
+  "javac -d %REMOTE_WORKSPACE% %REMOTE_WORKSPACE%/LogSearch.java"
 
 set TESTSUITE_PREFIX=
 if "%SANITY_TYPE%"=="Basic" (
