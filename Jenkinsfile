@@ -4,7 +4,7 @@ pipeline {
     parameters {
         choice(
             name: 'ENV',
-            choices: ['8342','8365','8645','8665','8666','8667','8731'],
+            choices: ['8289 Golden', '8342','8365','8645','8665','8666','8667','8731'],
             description: 'Choose the environment to run the test suite on.'
         )
 
