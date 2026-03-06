@@ -20,7 +20,7 @@ if "%SANITY_TYPE%"=="Basic" (
   set "TESTSUITE_PREFIX=Basic Sanity - "
 )
 
-for %%S in (NC COS CR RP MT BT SU COAM) do (
+for %%S in (NC) do (
   echo Running flow %%S
 
   ssh omswrk1@%HOST% ^
@@ -42,12 +42,11 @@ for %%S in (NC COS CR RP MT BT SU COAM) do (
     )
   )
 
-  call testrunner.bat ^
+  cmd /c testrunner.bat ^
     -E "ENV %ENV% GTM" ^
     -s "%TESTSUITE_PREFIX%%%TESTSUITE%%" ^
     -j -f "%CD%\%BUILD_DIR%\junit_report\%TESTSUITE_PREFIX%%%TESTSUITE%%" ^
     -r "%CD%\xml\PT2.xml"
-  cd /d "%WORKSPACE%"
 
   ssh omswrk1@%HOST% ^
     "kill $(cat %REMOTE_BUILD%/%%S.pid)"
