@@ -42,7 +42,7 @@ for %%S in (NC) do (
     )
   )
 
-  cmd /c testrunner.bat ^
+  cmd /c call testrunner.bat ^
     -E "ENV %ENV% GTM" ^
     -s "%TESTSUITE_PREFIX%%%TESTSUITE%%" ^
     -j -f "%CD%\%BUILD_DIR%\junit_report\%TESTSUITE_PREFIX%%%TESTSUITE%%" ^
@@ -65,7 +65,7 @@ set ERROR_DIR=%BUILD_DIR%\error_logs
 if not exist "%ERROR_DIR%" mkdir "%ERROR_DIR%"
 scp omswrk1@%HOST%:%REMOTE_BUILD%/*.err "%ERROR_DIR%"
 
-java -cp "%WORKSPACE%\java\local\target\classes;%WORKSPACE%\java\local\target\dependency\*" ^
+java -cp "java\local\target\classes;java\local\target\dependency\*" ^
   com.amdocs.sanity.SanityRunner ^
   --config config\sanity.properties ^
   --buildDir %BUILD_DIR% ^
