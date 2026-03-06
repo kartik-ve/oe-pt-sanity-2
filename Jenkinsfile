@@ -31,7 +31,7 @@ pipeline {
         stage('Build SanityRunner') {
             steps {
                 dir('java/local') {
-                    bat 'mvn clean package dependency:copy-dependencies'
+                    bat 'mvn clean package'
                 }
             }
         }
