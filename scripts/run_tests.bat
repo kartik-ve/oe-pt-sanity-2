@@ -42,11 +42,12 @@ for %%S in (NC COS CR RP MT BT SU COAM) do (
     )
   )
 
-  testrunner.bat ^
+  call testrunner.bat ^
     -E "ENV %ENV% GTM" ^
     -s "%TESTSUITE_PREFIX%%%TESTSUITE%%" ^
     -j -f "%CD%\%BUILD_DIR%\junit_report\%TESTSUITE_PREFIX%%%TESTSUITE%%" ^
     -r "%CD%\xml\PT2.xml"
+  cd /d "%WORKSPACE%"
 
   ssh omswrk1@%HOST% ^
     "kill $(cat %REMOTE_BUILD%/%%S.pid)"
