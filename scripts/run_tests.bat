@@ -46,7 +46,7 @@ for %%S in (NC COS CR RP MT BT SU COAM) do (
     -E "ENV %ENV% GTM" ^
     -s "%TESTSUITE_PREFIX%%%TESTSUITE%%" ^
     -j -f "%CD%\%BUILD_DIR%\junit_report\%TESTSUITE_PREFIX%%%TESTSUITE%%" ^
-    -r "%CD%\xml\PT.xml"
+    -r "%CD%\xml\PT2.xml"
 
   ssh omswrk1@%HOST% ^
     "kill $(cat %REMOTE_BUILD%/%%S.pid)"
