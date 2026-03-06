@@ -57,12 +57,15 @@ for %%S in (NC COS CR RP MT BT SU COAM) do (
 
 :after_loop
 
+echo PWD:
+cd
+
 set ERROR_DIR=%BUILD_DIR%\error_logs
 
 if not exist "%ERROR_DIR%" mkdir "%ERROR_DIR%"
 scp omswrk1@%HOST%:%REMOTE_BUILD%/*.err "%ERROR_DIR%"
 
-java -cp "java\local\target\classes;java\local\target\dependency\*" ^
+java -cp "%WORKSPACE%\java\local\target\classes;%WORKSPACE%\java\local\target\dependency\*" ^
   com.amdocs.sanity.SanityRunner ^
   --config config\sanity.properties ^
   --buildDir %BUILD_DIR% ^
